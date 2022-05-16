@@ -1,0 +1,7 @@
+extends home
+
+block content
+    form(method="post")
+        input(type="text", name="title",placeholder="Input title",required,value=`${note.title}`)
+        textarea(name="content", cols="30", rows="10",required,id="notice",placeholder=`${note.content}`) 
+        input(type="submit",value="submit")

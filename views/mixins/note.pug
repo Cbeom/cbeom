@@ -1,0 +1,11 @@
+mixin note(item)
+    ul 
+        li
+            a(href=`/${item.id}`)=item.title
+        li
+            span=item.content
+        li
+            span #{item.meta.rating} / 5
+        li
+            span #{item.meta.view >0 ? `${item.meta.view} view`: `${item.meta.view} view`}
+        hr

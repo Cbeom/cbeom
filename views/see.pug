@@ -1,0 +1,12 @@
+block content
+
+h1=note.title 
+p=note.content
+br
+small rating : #{note.meta.rating}
+br
+small view:#{note.meta.view}
+hr
+a(href=`${note.id}/edit`) edit
+br
+a(href=`${note.id}/delete`) Delete
