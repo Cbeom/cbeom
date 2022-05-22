@@ -1,0 +1,7 @@
+extends base.pug
+include mixins/notice.pug
+
+block content
+    if notice
+        each item in notice
+            +notice(item)

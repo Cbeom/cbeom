@@ -1,0 +1,17 @@
+extends base
+
+block content
+    p=notice.description
+    small=notice.user
+    if notice.image
+        img(src="/"+notice.image, width="100",height="100")
+    br
+    small rating : #{notice.meta.rating}
+    br
+    small views : #{notice.meta.views}
+    hr
+    a(href=`${notice.id}/edit`) Edit notice &rarr;
+    br
+    a(href=`${notice.id}/delete`) Delte notice &rarr;
+    br
+    a(href=`${notice.id}/report`) report notice &rarr;
