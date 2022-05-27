@@ -15,3 +15,21 @@ block content
     a(href=`${notice.id}/delete`) Delte notice &rarr;
     br
     a(href=`${notice.id}/report`) report notice &rarr;
+    hr
+    -for(let i=0;i<notice.comment.parentid;i++)
+        p=notice.comment[i].parentid
+        p=notice.comment[i].parentcomment
+        br
+        if notice.comment[i].parentid
+            -for(let j=0;j<notice.comment[i].childid;j++)
+                small=notice.comment[i].childid[j]
+                small=notice.comment[i].childcomment[j]
+                br
+                form(method="POST")
+                    input(type="text", name="childid",placeholder="child ID")
+                    textarea(name="childcomment", cols="20", rows="5",id="childcomment",placeholder="child comment")
+                    input(type="submit",value="submit")
+    form(method="POST")
+        input(type="text", name="parentid",placeholder="parent ID")
+        textarea(name="parentcomment", cols="20", rows="5",id="parentcomment",placeholder="parent comment")
+        input(type="submit",value="submit")

@@ -14,7 +14,7 @@ export const search= async (req,res)=>{
     if(title){
         notice=await Notice.find({
             title:{
-                $regex:new RegExp(title,"i")
+                $regex:new RegExp(`${title}`,"i")
             },
         })
     }
@@ -31,11 +31,21 @@ export const postUpload=async (req,res)=>{
         body:{title,content},
         file,
     }=req;
-    await Notice.create({
-        title,
-        description:content,
-        image:file.path,
-    });
+    //이미지 파일을 업로드 할 경우
+    if(file){
+        await Notice.create({
+            title,
+            description:content,
+            image:file.path,
+        });
+    }
+    //이미지 파일을 업로드 안할경우
+    else{
+        await Notice.create({
+            title,
+            description:content,
+        });
+    }
     return res.redirect("/");
 };
 
@@ -66,18 +76,26 @@ export const getEdit=async (req,res)=>{
 
 export const postEdit=async (req,res)=>{
     const{
-        body:{title,description,image},
+        body:{title,content},
         params:{id},
+        file,
     }=req;
     const exists=await Notice.exists({_id:id});
     if(!exists){
         return res.redirect("/");
     }
-    await Notice.findByIdAndUpdate(id,{
-        title,
-        description,
-        image,
-    });
+    if(file){
+        await Notice.findByIdAndUpdate(id,{
+            title,
+            description:content,
+            image:file.path,
+        },{new:true});
+    } else {
+        await Notice.findByIdAndUpdate(id,{
+            title,
+            description:content,
+        });
+    }
     return res.redirect("/");
 };
 
@@ -90,19 +108,53 @@ export const deleteNotice=async (req,res)=>{
 };
 
 export const getReport=async(req,res)=>{
-    return res.render("report",{pageTitle:"Report Notice"});
-};
-
-export const postReport=async(req,res)=>{
     const{
         params:{id},
     }=req;
-    await Notice.create({
-    });
+    const notice=await Notice.findById(id);
+    return res.render("report",{ pageTitle: `Report Notice`, notice });
+};
+//신고기능 보완 필요
+export const postReport=async(req,res)=>{
+    const{
+        params:{id},
+        body:{rtitle,rcontent},
+    }=req;
     const notice=await Notice.findById(id);
     await Notice.findByIdAndUpdate(id,{
-        
-    });
-    return res.render("report",{pageTitle:`${notice.title}`,notice}); 
+        rtitle,
+        rcontent,
+        report:{
+            rcount:notice.report.rcount+1,
+        },
+    },{new:true});
+    if(notice.report.rcount>0){
+        await Notice.findByIdAndDelete(id);
+        return res.redirect("/");
+    }
+    return res.redirect("/");
+}
+//댓글기능
+export const getComment=async(req,res)=>{
+    const{
+        params:{id},
+    }=req;
+    const notice=await Notice.findById(id);
+    return res.render("see",{ pageTitle: `see Notice`, notice });
 };
 
+export const postComment=async(req,res)=>{
+    const{
+        params:{id},
+        body:{childid,childcomment,parentid,parentcomment},
+    }=req;
+    const notice=await Notice.findById(id);
+    await Notice.findByIdAndUpdate(id,{
+        parentid,
+        parentcomment,
+        childid,
+        childcomment,
+    },{new:true});
+    console.log(parentid,childid);
+    return res.render("see",{ pageTitle: `see Notice`, notice });
+}

@@ -11,4 +11,6 @@ mixin notice(item)
             span #{item.meta.rating} / 5
         li
             span #{item.meta.view >0 ? `${item.meta.views} views`: `${item.meta.views} view`}
+        li  
+            span #{item.report.rcount}
         hr

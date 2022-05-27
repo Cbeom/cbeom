@@ -1,7 +1,7 @@
 extends base
 
 block content
-    form(method="post",enctype="multipart/form-data")
+    form(method="POST",enctype="multipart/form-data")
         label(for="avatar")
         input(type="file",id="avatar",name="avatar",accept="image/jpg")
         input(type="text", name="title",placeholder="Input title",required,maxlength="20")
